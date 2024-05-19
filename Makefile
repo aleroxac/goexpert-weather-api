@@ -17,21 +17,19 @@ clean: ## Clean all temp files
 
 ## ----- MAIN
 build: ## build the container image
-	@docker build -t gcr.io/aleroxac/goexpert-cloudrun:v1 .
+	@docker build -t gcr.io/aleroxac/goexpert-weather-api:v1 .
 
 push: ## push the container image to image registry
-	@docker push gcr.io/aleroxac/goexpert-cloudrun:v1
-
-deploy: push ## deploy the application to cloud-run
-	@gcloud run deploy goexpert-weather-api
+	@docker push gcr.io/aleroxac/goexpert-weather-api:v1
 
 serve: ## run the server
-	@go run main.go
+	@cd cmd/app && go run main.go
+	@cd -
 
 run: ## make some api requests
-	@echo -e "\n-------------------- 422 --------------------"; curl -s "http://localhost:8080/weather?cep=1234567"
-	@echo -e "\n-------------------- 402 --------------------"; curl -s "http://localhost:8080/weather?cep=12345678"
-	@echo -e "\n-------------------- 200 --------------------"; curl -s "http://localhost:8080/weather?cep=13330250"
+	@echo -e "\n-------------------- 422 --------------------"; curl -s "http://localhost:8080/cep/1234567" -H "VIA_CEP_API_KEY: ${VIA_CEP_API_KEY}"
+	@echo -e "\n-------------------- 402 --------------------"; curl -s "http://localhost:8080/cep/12345678" -H "VIA_CEP_API_KEY: ${VIA_CEP_API_KEY}"
+	@echo -e "\n-------------------- 200 --------------------"; curl -s "http://localhost:8080/cep/13330250" -H "VIA_CEP_API_KEY: ${VIA_CEP_API_KEY}"
 
 test: ## run tests
 	@go test -v ./... -coverprofile=coverage.out
