@@ -1,4 +1,4 @@
-# goexpert-cloudrun
+# goexpert-weather-api
 Projeto do Laboratório "Deploy com Cloud Run" do treinamento GoExpert(FullCycle).
 
 
@@ -30,7 +30,7 @@ make run
 
 
 
-## Requisitos: dev
+## Requisitos: sistema
 - [x] O sistema deve receber um CEP válido de 8 digitos
 - [x] O sistema deve realizar a pesquisa do CEP e encontrar o nome da localização, a partir disso, deverá retornar as temperaturas e formata-lás em: Celsius, Fahrenheit, Kelvin.
 - [x] O sistema deve responder adequadamente nos seguintes cenários:
@@ -43,4 +43,10 @@ make run
     - ​​​Em caso de falha, caso o CEP não seja encontrado:
         - [x] Código HTTP: 404
         - [x] Mensagem: can not find zipcode
-- [ ] Deverá ser realizado o deploy no Google Cloud Run.
+- [x] Deverá ser realizado o deploy no Google Cloud Run.
+
+## Requisitos: entrega
+- [x] O código-fonte completo da implementação.
+- [x] Testes automatizados demonstrando o funcionamento.
+- [x] Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
+- [x] Deploy realizado no Google Cloud Run (free tier) e endereço ativo para ser acessado.
