@@ -7,6 +7,7 @@ Projeto do Laboratório "Deploy com Cloud Run" do treinamento GoExpert(FullCycle
 Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o clima atual (temperatura em graus celsius, fahrenheit e kelvin). Esse sistema deverá ser publicado no Google Cloud Run.
 
 
+
 ## Como rodar o projeto
 ``` shell
 # build the container image
@@ -43,10 +44,12 @@ make run
     - ​​​Em caso de falha, caso o CEP não seja encontrado:
         - [x] Código HTTP: 404
         - [x] Mensagem: can not find zipcode
-- [x] Deverá ser realizado o deploy no Google Cloud Run.
+- [x] Deverá ser realizado o [deploy no Google Cloud Run](https://goexpert-weather-api-llvisyuaqq-uc.a.run.app).
+
+
 
 ## Requisitos: entrega
 - [x] O código-fonte completo da implementação.
 - [x] Testes automatizados demonstrando o funcionamento.
 - [x] Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
-- [x] Deploy realizado no Google Cloud Run (free tier) e endereço ativo para ser acessado.
+- [x] Deploy realizado no Google Cloud Run (free tier) e [endereço ativo para ser acessado](https://goexpert-weather-api-llvisyuaqq-uc.a.run.app).
