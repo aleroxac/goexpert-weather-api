@@ -51,5 +51,5 @@ make run
 ## Requisitos: entrega
 - [x] O código-fonte completo da implementação.
 - [x] Testes automatizados demonstrando o funcionamento.
-- [x] Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
+- [x] Utilize docker e docker-compose para que possamos realizar os testes de sua aplicação.
 - [x] Deploy realizado no Google Cloud Run (free tier) e [endereço ativo para ser acessado](https://goexpert-weather-api-llvisyuaqq-uc.a.run.app).
