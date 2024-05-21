@@ -11,15 +11,15 @@ import (
 )
 
 func TestGetWeather(t *testing.T) {
-	via_cep_api_key := os.Getenv("VIA_CEP_API_KEY")
-	if via_cep_api_key == "" {
-		log.Fatal("Please provide the environment variable VIA_CEP_API_KEY and try again.")
+	open_weathermap_api_key := os.Getenv("OPEN_WEATHERMAP_API_KEY")
+	if open_weathermap_api_key == "" {
+		log.Fatal("Please provide the environment variable OPEN_WEATHERMAP_API_KEY and try again.")
 	}
 
 	t.Run("valid weather", func(t *testing.T) {
 		get_weather_dto := usecase.WeatherInputDTO{
 			Localidade: "São Paulo",
-			ApiKey:     via_cep_api_key,
+			ApiKey:     open_weathermap_api_key,
 		}
 		webCEPHandler := web.NewWebCEPHandler()
 
@@ -31,7 +31,7 @@ func TestGetWeather(t *testing.T) {
 
 	t.Run("missing Localidade field", func(t *testing.T) {
 		get_weather_dto := usecase.WeatherInputDTO{
-			ApiKey: via_cep_api_key,
+			ApiKey: open_weathermap_api_key,
 		}
 		webCEPHandler := web.NewWebCEPHandler()
 
@@ -56,7 +56,7 @@ func TestGetWeather(t *testing.T) {
 	t.Run("fail to get weather", func(t *testing.T) {
 		get_weather_dto := usecase.WeatherInputDTO{
 			Localidade: "goexpert",
-			ApiKey:     via_cep_api_key,
+			ApiKey:     open_weathermap_api_key,
 		}
 		webCEPHandler := web.NewWebCEPHandler()
 

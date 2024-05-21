@@ -26,10 +26,10 @@ func NewWebCEPHandler() *WebCEPHandler {
 func (h *WebCEPHandler) Get(w http.ResponseWriter, r *http.Request) {
 	cep_address := chi.URLParam(r, "cep")
 
-	via_cep_api_key := r.Header.Get("VIA_CEP_API_KEY")
-	if via_cep_api_key == "" {
-		http.Error(w, "Please, provide the VIA_CEP_API_KEY header", http.StatusBadRequest)
-		log.Println("Please, provide the VIA_CEP_API_KEY header")
+	open_weathermap_api_key := r.Header.Get("OPEN_WEATHERMAP_API_KEY")
+	if open_weathermap_api_key == "" {
+		http.Error(w, "Please, provide the OPEN_WEATHERMAP_API_KEY header", http.StatusBadRequest)
+		log.Println("Please, provide the OPEN_WEATHERMAP_API_KEY header")
 		return
 	}
 
@@ -65,7 +65,7 @@ func (h *WebCEPHandler) Get(w http.ResponseWriter, r *http.Request) {
 	// WEATHER FLOW
 	weather_dto := usecase.WeatherInputDTO{
 		Localidade: cep_output.Localidade,
-		ApiKey:     via_cep_api_key,
+		ApiKey:     open_weathermap_api_key,
 	}
 	getWeather := usecase.NewGetWeatherUseCase(h.WeatherRepository)
 	weather_output, err := getWeather.Execute(weather_dto)

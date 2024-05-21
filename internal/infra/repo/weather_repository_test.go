@@ -12,12 +12,12 @@ import (
 func TestGetWeather(t *testing.T) {
 	repo := NewWeatherRepository()
 
-	via_cep_api_key := os.Getenv("VIA_CEP_API_KEY")
-	if via_cep_api_key == "" {
-		log.Fatal("Please provide the environment variable VIA_CEP_API_KEY and try again.")
+	open_weathermap_api_key := os.Getenv("OPEN_WEATHERMAP_API_KEY")
+	if open_weathermap_api_key == "" {
+		log.Fatal("Please provide the environment variable OPEN_WEATHERMAP_API_KEY and try again.")
 	}
 
-	weather_res, err := repo.Get("São Paulo", via_cep_api_key)
+	weather_res, err := repo.Get("São Paulo", open_weathermap_api_key)
 	assert.NoError(t, err)
 	assert.Contains(t, string(weather_res), "São Paulo")
 	assert.Contains(t, string(weather_res), "temp")

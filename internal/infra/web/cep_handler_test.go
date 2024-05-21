@@ -14,16 +14,16 @@ import (
 )
 
 func TestCEPHandler(t *testing.T) {
-	via_cep_api_key := os.Getenv("VIA_CEP_API_KEY")
-	if via_cep_api_key == "" {
-		log.Fatal("Please provide the environment variable VIA_CEP_API_KEY and try again.")
+	open_weathermap_api_key := os.Getenv("OPEN_WEATHERMAP_API_KEY")
+	if open_weathermap_api_key == "" {
+		log.Fatal("Please provide the environment variable OPEN_WEATHERMAP_API_KEY and try again.")
 	}
 
 	router := chi.NewRouter()
 	router.Get("/cep/{cep}", NewWebCEPHandler().Get)
 
 	req, err := http.NewRequest("GET", "/cep/01001001", nil)
-	req.Header.Add("VIA_CEP_API_KEY", via_cep_api_key)
+	req.Header.Add("OPEN_WEATHERMAP_API_KEY", open_weathermap_api_key)
 	assert.NoError(t, err)
 
 	rr := httptest.NewRecorder()
