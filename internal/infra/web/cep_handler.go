@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/aleroxac/goexpert-weather-api/internal/entity"
 	"github.com/aleroxac/goexpert-weather-api/internal/infra/repo"
@@ -19,17 +20,17 @@ type WebCEPHandler struct {
 func NewWebCEPHandler() *WebCEPHandler {
 	return &WebCEPHandler{
 		CEPRepository:     repo.NewCEPRepository(),
-		WeatherRepository: repo.NewWeatherRepository(),
+		WeatherRepository: repo.NewWeatherRepository(&http.Client{}),
 	}
 }
 
 func (h *WebCEPHandler) Get(w http.ResponseWriter, r *http.Request) {
 	cep_address := chi.URLParam(r, "cep")
 
-	open_weathermap_api_key := r.Header.Get("OPEN_WEATHERMAP_API_KEY")
+	open_weathermap_api_key := os.Getenv("OPEN_WEATHERMAP_API_KEY")
 	if open_weathermap_api_key == "" {
-		http.Error(w, "Please, provide the OPEN_WEATHERMAP_API_KEY header", http.StatusBadRequest)
-		log.Println("Please, provide the OPEN_WEATHERMAP_API_KEY header")
+		http.Error(w, "Please, provide the OPEN_WEATHERMAP_API_KEY environment variable", http.StatusBadRequest)
+		log.Println("Please, provide the OPEN_WEATHERMAP_API_KEY environment variable")
 		return
 	}
 

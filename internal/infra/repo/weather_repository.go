@@ -13,10 +13,18 @@ import (
 	"github.com/aleroxac/goexpert-weather-api/internal/entity"
 )
 
-type WeatherRepository struct{}
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
 
-func NewWeatherRepository() *WeatherRepository {
-	return &WeatherRepository{}
+type WeatherRepository struct {
+	client HTTPClient
+}
+
+func NewWeatherRepository(client HTTPClient) *WeatherRepository {
+	return &WeatherRepository{
+		client: client,
+	}
 }
 
 func (w *WeatherRepository) Get(localidade string, api_key string) ([]byte, error) {
@@ -40,7 +48,7 @@ func (w *WeatherRepository) Get(localidade string, api_key string) ([]byte, erro
 		return nil, err
 	}
 
-	res, err := http.DefaultClient.Do(req)
+	res, err := w.client.Do(req)
 	if err != nil {
 		log.Printf("Fail to make the request: %v", err)
 		return nil, err

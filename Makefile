@@ -45,9 +45,9 @@ serve: ## Run the server
 
 .PHONY: run
 run: ## Make some requests
-	@echo -e "\n-------------------- 422 --------------------"; curl -s "http://localhost:8080/cep/1234567" -H "OPEN_WEATHERMAP_API_KEY: ${OPEN_WEATHERMAP_API_KEY}"
-	@echo -e "\n-------------------- 402 --------------------"; curl -s "http://localhost:8080/cep/12345678" -H "OPEN_WEATHERMAP_API_KEY: ${OPEN_WEATHERMAP_API_KEY}"
-	@echo -e "\n-------------------- 200 --------------------"; curl -s "http://localhost:8080/cep/13330250" -H "OPEN_WEATHERMAP_API_KEY: ${OPEN_WEATHERMAP_API_KEY}"
+	@echo -e "\n-------------------- 422 --------------------"; curl -s "http://localhost:8080/cep/1234567"
+	@echo -e "\n-------------------- 402 --------------------"; curl -s "http://localhost:8080/cep/12345678"
+	@echo -e "\n-------------------- 200 --------------------"; curl -s "http://localhost:8080/cep/13330250"
 
 .PHONY: test
 test: ## Run the tests
