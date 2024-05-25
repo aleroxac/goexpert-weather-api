@@ -2,83 +2,63 @@ package web
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/aleroxac/goexpert-weather-api/internal/entity"
-	"github.com/aleroxac/goexpert-weather-api/internal/infra/repo"
-	"github.com/aleroxac/goexpert-weather-api/internal/usecase"
 	"github.com/go-chi/chi/v5"
 )
 
 type WebCEPHandler struct {
 	CEPRepository     entity.CEPRepositoryInterface
 	WeatherRepository entity.WeatherRepositoryInterface
+	ApiKey            string
 }
 
-func NewWebCEPHandler() *WebCEPHandler {
+func NewWebCEPHandlerWithDeps(cepRepo entity.CEPRepositoryInterface, weatherRepo entity.WeatherRepositoryInterface, api_key string) *WebCEPHandler {
 	return &WebCEPHandler{
-		CEPRepository:     repo.NewCEPRepository(),
-		WeatherRepository: repo.NewWeatherRepository(&http.Client{}),
+		CEPRepository:     cepRepo,
+		WeatherRepository: weatherRepo,
+		ApiKey:            api_key,
 	}
 }
 
 func (h *WebCEPHandler) Get(w http.ResponseWriter, r *http.Request) {
-	cep_address := chi.URLParam(r, "cep")
-
-	open_weathermap_api_key := os.Getenv("OPEN_WEATHERMAP_API_KEY")
-	if open_weathermap_api_key == "" {
-		http.Error(w, "Please, provide the OPEN_WEATHERMAP_API_KEY environment variable", http.StatusBadRequest)
-		log.Println("Please, provide the OPEN_WEATHERMAP_API_KEY environment variable")
+	cep := chi.URLParam(r, "cep")
+	if !h.CEPRepository.IsValid(cep) {
+		http.Error(w, "Invalid CEP", http.StatusBadRequest)
 		return
 	}
 
-	// CEP FLOW
-	validate_cep_dto := usecase.ValidateCEPInputDTO{
-		CEP: cep_address,
-	}
-
-	validateCEP := usecase.NewValidateCEPUseCase(h.CEPRepository)
-	is_valid := validateCEP.Execute(validate_cep_dto)
-	if !is_valid {
-		http.Error(w, "invalid zipcode", http.StatusUnprocessableEntity)
-		return
-	}
-
-	get_cep_dto := usecase.CEPInputDTO{
-		CEP: cep_address,
-	}
-
-	getCEP := usecase.NewGetCEPUseCase(h.CEPRepository)
-	cep_output, err := getCEP.Execute(get_cep_dto)
-
+	cepData, err := h.CEPRepository.Get(cep)
 	if err != nil {
-		http.Error(w, "error getting cep", http.StatusInternalServerError)
+		http.Error(w, "Error fetching CEP data", http.StatusInternalServerError)
 		return
 	}
 
-	if cep_output.Localidade == "" {
-		http.Error(w, "can not find zipcode", http.StatusNotFound)
+	cepEntity, err := h.CEPRepository.Convert(cepData)
+	if err != nil {
+		http.Error(w, "Error converting CEP data", http.StatusInternalServerError)
 		return
 	}
 
-	// WEATHER FLOW
-	weather_dto := usecase.WeatherInputDTO{
-		Localidade: cep_output.Localidade,
-		ApiKey:     open_weathermap_api_key,
+	weatherData, err := h.WeatherRepository.Get(cepEntity.Localidade, h.ApiKey)
+	if err != nil {
+		http.Error(w, "Error fetching weather data", http.StatusInternalServerError)
+		return
 	}
-	getWeather := usecase.NewGetWeatherUseCase(h.WeatherRepository)
-	weather_output, err := getWeather.Execute(weather_dto)
-	if err != nil || (weather_output.Celcius == 0 && weather_output.Fahrenheit == 0 && weather_output.Kelvin == 0) {
-		http.Error(w, "error getting weather", http.StatusInternalServerError)
+
+	weatherResponse, err := h.WeatherRepository.ConvertToWeatherResponse(weatherData)
+	if err != nil {
+		http.Error(w, "Error converting weather data", http.StatusInternalServerError)
+		return
+	}
+
+	weather, err := h.WeatherRepository.ConvertToWeather(weatherResponse)
+	if err != nil {
+		http.Error(w, "Error converting weather response", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(weather_output)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	json.NewEncoder(w).Encode(weather)
 }

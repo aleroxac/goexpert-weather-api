@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"os"
 
+	"github.com/aleroxac/goexpert-weather-api/internal/infra/repo"
 	"github.com/aleroxac/goexpert-weather-api/internal/infra/web"
 	"github.com/aleroxac/goexpert-weather-api/internal/infra/web/webserver"
 )
@@ -10,7 +13,10 @@ import (
 func ConfigureServer() *webserver.WebServer {
 	webserver := webserver.NewWebServer(":8080")
 
-	webCEPHandler := web.NewWebCEPHandler()
+	cepRepo := repo.NewCEPRepository()
+	weatherRepo := repo.NewWeatherRepository(&http.Client{})
+
+	webCEPHandler := web.NewWebCEPHandlerWithDeps(cepRepo, weatherRepo, os.Getenv("OPEN_WEATHERMAP_API_KEY"))
 	webStatusHandler := web.NewWebStatusHandler()
 
 	webserver.AddHandler("GET /cep/{cep}", webCEPHandler.Get)
