@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/aleroxac/goexpert-weather-api/internal/entity"
@@ -36,6 +37,11 @@ func NewGetCEPUseCase(cep_repository entity.CEPRepositoryInterface) *GetCEPUseCa
 func (c *GetCEPUseCase) Execute(input CEPInputDTO) (CEPOutputDTO, error) {
 	cep := entity.CEP{
 		CEP: input.CEP,
+	}
+
+	is_valid := c.CEPRepository.IsValid(cep.CEP)
+	if !is_valid {
+		return CEPOutputDTO{}, errors.New("invalid zipcode")
 	}
 
 	cep_resp, err := c.CEPRepository.Get(cep.CEP)
