@@ -9,6 +9,8 @@ services:
       dockerfile: Dockerfile
       tags:
         - gcr.io/aleroxac/goexpert-weather-api:v1
+    env_file:
+      - ./.env
     ports:
       - 8080:8080
     healthcheck:
