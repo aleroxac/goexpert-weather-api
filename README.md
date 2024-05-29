@@ -8,7 +8,7 @@ Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o 
 
 
 
-## Como rodar o projeto
+## Como rodar o projeto: make
 ``` shell
 # build the container image
 make build
@@ -18,6 +18,33 @@ make deploy
 
 # run locally
 make run
+```
+
+
+
+## Como rodar o projeto: manual
+``` shell
+## 1. Clone o repo
+
+## 2. Crie o .env
+cp .env.example .env
+
+## 3. Coloque sua api-key como valor na variável OPEN_WEATHERMAP_API_KEY no .env
+
+## 4. Baixe compose, se estiver up
+docker-compose down
+
+## 5. Remover a imagem antiga, se existir
+docker image rm -f gcr.io/aleroxac/goexpert-weather-api:v1
+
+## 6. Suba o compose 
+docker-compose up -d
+
+## 7. Faça as chamadas
+## retorno 200
+echo -n "422: "; curl -s "http://localhost:8080/cep/1234567"
+echo -n "404: "; curl -s "http://localhost:8080/cep/12345678"
+echo -n "200: "; curl -s "http://localhost:8080/cep/13330250"
 ```
 
 

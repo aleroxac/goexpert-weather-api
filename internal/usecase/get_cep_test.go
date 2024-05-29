@@ -105,7 +105,7 @@ func TestGetCEPUseCase(t *testing.T) {
 		assert.Equal(t, cep_output.SIAFI, "7107")
 	})
 
-	t.Run("invalid cep", func(t *testing.T) {
+	t.Run("invalid zipcode", func(t *testing.T) {
 		cep_address := "0100100"
 
 		mockCEPRepo := new(MockCEPRepository)

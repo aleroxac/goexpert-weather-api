@@ -45,9 +45,9 @@ serve: ## Run the server
 
 .PHONY: run
 run: ## Make some requests
-	@echo -e "\n-------------------- 422 --------------------"; curl -s "http://localhost:8080/cep/1234567"
-	@echo -e "\n-------------------- 402 --------------------"; curl -s "http://localhost:8080/cep/12345678"
-	@echo -e "\n-------------------- 200 --------------------"; curl -s "http://localhost:8080/cep/13330250"
+	@echo -n "422: "; curl -s "http://localhost:8080/cep/1234567"
+	@echo -n "404: "; curl -s "http://localhost:8080/cep/12345678"
+	@echo -n "200: "; curl -s "http://localhost:8080/cep/13330250"
 
 .PHONY: test
 test: ## Run the tests
