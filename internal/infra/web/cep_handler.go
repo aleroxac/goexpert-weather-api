@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/aleroxac/goexpert-weather-api/internal/entity"
 	"github.com/go-chi/chi/v5"
@@ -25,13 +26,18 @@ func NewWebCEPHandlerWithDeps(cepRepo entity.CEPRepositoryInterface, weatherRepo
 func (h *WebCEPHandler) Get(w http.ResponseWriter, r *http.Request) {
 	cep := chi.URLParam(r, "cep")
 	if !h.CEPRepository.IsValid(cep) {
-		http.Error(w, "Invalid CEP", http.StatusBadRequest)
+		http.Error(w, "invalid zipcode", http.StatusUnprocessableEntity)
 		return
 	}
 
 	cepData, err := h.CEPRepository.Get(cep)
 	if err != nil {
 		http.Error(w, "Error fetching CEP data", http.StatusInternalServerError)
+		return
+	}
+
+	if strings.Contains(string(cepData), "erro") {
+		http.Error(w, "can not find zipcode", http.StatusNotFound)
 		return
 	}
 
